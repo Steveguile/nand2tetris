@@ -1,0 +1,129 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+/*
+ * CHIP Register {
+ *   IN in[16], load;
+ *   OUT out[16];
+ *
+ * CHIP PC {
+ *   IN in[16],load,inc,reset;
+ *   OUT out[16];
+ *
+ * CHIP ALU {
+ *    IN  
+ *        x[16], y[16],  // 16-bit inputs        
+ *        zx, // zero the x input?
+ *        nx, // negate the x input?
+ *        zy, // zero the y input?
+ *        ny, // negate the y input?
+ *        f,  // compute out = x + y (if 1) or x & y (if 0)
+ *        no; // negate the out output?
+ *    OUT 
+ *        out[16], // 16-bit output
+ *        zr, // 1 if (out == 0), 0 otherwise        
+ *        ng; // 1 if (out < 0),  0 otherwise
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+
+    // op /  /  a  c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+    // 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+    // op = 0 signifies A-Instruction | 1 signifies C-Instruction
+    // a = compare. 0 signifies A | 1 signifies C 
+    // c = compare bits 
+    // d = destination bits
+    // j = jump bits 
+
+    // Formalise A and C instructions 
+    Not(in=instruction[15], out=aInstruction);
+    Not(in=aInstruction, out=cInstruction);
+
+    // A Reg bits (turns out I have to user ARegister not Register)
+    And(a=cInstruction, b=instruction[5], out=aSel);
+    Mux16(a=instruction, b=ALUout, sel=aSel, out=aRegIn); // Choose from instruction or ALU out to A Register
+    Or(a=aInstruction, b=aSel, out=storeA);
+    ARegister(in=aRegIn, load=storeA, out=aRegOut, out[0..14]=addressM); // A Register | Don't care about first(last) bit for RAM16k
+
+    // A or M selector 
+    Mux16(a=aRegOut, b=inM, sel=instruction[12], out=aMuxM);
+
+    // D Reg bits (Same for DRegister)
+    And(a=cInstruction, b=instruction[4], out=storeD);
+    DRegister(in=ALUout, load=storeD, out=dRegOut);
+
+    // ALU 
+    ALU(x=dRegOut, y=aMuxM, // x is d reg | y is A reg or M
+        zx=instruction[11], 
+        nx=instruction[10], 
+        zy=instruction[9], 
+        ny=instruction[8], 
+        f=instruction[7],
+        no=instruction[6], 
+        out=outM, out=ALUout, // One for actual out, one for reuse
+        zr=ZRout, ng=NGout); 
+
+    And(a=cInstruction, b=instruction[3], out=writeM); // Write to memory flag
+
+    // Jump logic 
+    // 000 is increment address, 111 is goto address, else conditional
+    Not(in=ZRout, out=outNotZR); // If out <> 0 then outNotZR = 1
+    Not(in=NGout, out=outPos); // IF out > 0 then outPos = 1
+
+    // If bits are correct and positive number and not zero "signal" a jump
+    And(a=instruction[15], b=instruction[0], out=jgt);
+    And(a=outNotZR, b=outPos, out=outPosNotZR);
+    And(a=jgt, b=outPosNotZR, out=checkLoad1);
+
+    // If bits are correct and number is zero "signal" a jump
+    And(a=instruction[15], b=instruction[1], out=jeq);
+    And(a=jeq, b=ZRout, out=checkLoad2);
+
+    // If bits are correct and number is less than zero "signal" a jump
+    And(a=instruction[15], b=instruction[2], out=jlt);
+    And(a=jlt, b=NGout, out=checkLoad3);
+
+    // Make sure at least one of the jump "signals" is true
+    Or(a=checkLoad1, b=checkLoad2, out=checkCond1);
+    Or(a=checkCond1, b=checkLoad3, out=load);
+
+    PC(in=aRegOut, load=load, inc=true, reset=reset, out[0..14]=pc); // Again, ignore 15th bit as not used for RAM16K
+
+}
