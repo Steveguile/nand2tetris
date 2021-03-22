@@ -1,5 +1,6 @@
 import sys 
 import os 
+import logging
 
 push_pop_commands = {"push", "pop"}
 arithmetic_commands = {"add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not"}
@@ -7,12 +8,14 @@ branching_commands = {"label", "if-goto", "goto"}
 function_commands = {"function", "call", "return"}
 segments = {"local": "@LCL", "argument": "@ARG", "this": "@THIS", "that": "@THAT"}
 
+comments_enabled = True
+
 def checkIgnoreLine(line: str):
-    """ Determines if a line has characteristics required to ignore
-    Args:
-        line    :   Line of .vm code   
-    Returns:
-        Boolean saying if line should be skipped or not
+    """ Determines if a line has characteristics required to ignore \n
+    Args: \n
+        line    :   Line of .vm code \n
+    Returns: \n
+        Boolean saying if line should be skipped or not \n
     """
     # Checks if line meets conditions to ignore
     ignoreLine = False
@@ -25,13 +28,13 @@ def checkIgnoreLine(line: str):
     return ignoreLine
 
 def memoryTranslate(file_name: str, command: str, mem_seg: str, value: str):
-    """ Determines how to handle a given memory operation command in hack assembly
-    Args:
-        file_name   :   Name of file currently being converted to hack. Used for static variables
-        command     :   Stack operation, see push_pop_commands
-        mem_seg     :   Memory segment command applies to, see segments dict
-        value       :   Value applied to command and memory segment
-    Returns:
+    """ Determines how to handle a given memory operation command in hack assembly \n
+    Args: \n
+        file_name   :   Name of file currently being converted to hack. Used for static variables \n
+        command     :   Stack operation, see push_pop_commands \n
+        mem_seg     :   Memory segment command applies to, see segments dict \n
+        value       :   Value applied to command and memory segment \n
+    Returns: \n
         Machine code array corresponding to input command 
     """
 
@@ -74,11 +77,11 @@ def memoryTranslate(file_name: str, command: str, mem_seg: str, value: str):
     return line_array
 
 def arithmetic(count: int, command: str):
-    """ Determines how to handle arithmetic command in hack assembly
-    Args:
-        count   :   Incremental count to increment and apply to every {eq, gt, lt} 
-        command :   Type of arithmetic command, see arithmetic_commands
-    Returns:
+    """ Determines how to handle arithmetic command in hack assembly \n
+    Args: \n
+        count   :   Incremental count to increment and apply to every {eq, gt, lt} \n
+        command :   Type of arithmetic command, see arithmetic_commands \n
+    Returns: \n
         Machine code array corresponding to input command 
     """
 
@@ -112,11 +115,11 @@ def arithmetic(count: int, command: str):
     return line_array
 
 def branching(command: str, label: str):
-    """ Determines how to handle brancing command in hack assembly
-    Args:
-        command :   Type of branching command, see branching_commands
-        label   :   Branch label to jump to / set position of 
-    Returns:
+    """ Determines how to handle brancing command in hack assembly \n
+    Args: \n
+        command :   Type of branching command, see branching_commands \n
+        label   :   Branch label to jump to / set position of \n
+    Returns: \n
         Machine code array corresponding to input command 
     """
 
@@ -127,61 +130,67 @@ def branching(command: str, label: str):
     elif command == "if-goto":
         line_array.extend(["@SP", "AM=M-1", "D=M", f"@{label}", "D;JNE"])
     elif command == "goto":
-        line_array.extend(["D=0", f"@{label}", "D;JEQ"])
+        line_array.extend([f"@{label}", "0;JMP"])
 
     return line_array
 
-def func(command: str, name: str, number: str):
-    """ Determines how to handle function command in hack assembly
-    Args:
-        command :   Type of function command, see function_commands 
-        name    :   Name of the function
-        number  :   Number of arguments/local variables 
-    Returns:
+def func(command: str, name: str, number: str, file_name: str, call_count: int):
+    """ Determines how to handle function command in hack assembly \n
+    Args: \n
+        command     :   Type of function command, see function_commands \n
+        name        :   Name of the function \n
+        number      :   Number of arguments/local variables \n
+        file_name   :   Name of the file \n
+        call_count  :   Count of times function has been called in this file
+    Returns: \n
         Machine code array corresponding to input command 
     """
 
     line_array = []
+    call_string = str(call_count)
 
     if command == "function":
         line_array.extend([f"({name})"])                                                        # Generate label
         for local_vars in range(int(number)):                                                   # For every local variable
-            line_array.extend([f"// push local 0 for {name}"])
+            if comments_enabled:                                                                
+                line_array.extend([f"// push local 0 for {name}"])
             line_array.extend(memoryTranslate("", "push", "constant", "0"))                     # Call push constant 0
     elif command == "call":
-        line_array.extend([f"@RETURN.{name}"])                                                    # Push return address label
-        line_array.extend(["@LCL", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                  # Push LCL
-        line_array.extend(["@ARG", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                  # Push ARG
-        line_array.extend(["@THIS", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                 # Push THIS
-        line_array.extend(["@THAT", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                 # Push THAT
+        func_name = name.split(".")[1]
+        line_array.extend([f"@{file_name}.{func_name}$ret.{call_string}", "D=A", "@SP", "A=M", "M=D", "@SP", "M=M+1"])      # Push return address label
+        line_array.extend(["@LCL", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                 # Push LCL
+        line_array.extend(["@ARG", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                 # Push ARG
+        line_array.extend(["@THIS", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                # Push THIS
+        line_array.extend(["@THAT", "D=M", "@SP", "A=M", "M=D", "@SP", "M=M+1"])                # Push THAT
         line_array.extend([f"@{number}", "D=A", "@5", "D=D+A", "@SP", "D=M-D", "@ARG", "M=D"])  # ARG = SP-(nArgs + 5)
         line_array.extend(["@SP", "D=M", "@LCL", "M=D"])                                        # LCL = SP
         line_array.extend(branching("goto", name))                                              # goto functionname
-        line_array.extend([f"(RETURN.{name})"])                                                   # label for return address
+        line_array.extend([f"({file_name}.{func_name}$ret.{call_string})"])                     # label for return address
     elif command == "return":
         line_array.extend(["@LCL", "D=M", "@endFrame", "M=D"])                                  # endFrame = LCL
-        line_array.extend(["@retAddr", "M=D", "@5", "D=A", "@retAddr", "M=M-D"])                # retAddr = (*endFrame - 5)
+        line_array.extend(["@5", "D=D-A", "A=D", "D=M", "@retAddr", "M=D"])                     # retAddr = (*endFrame - 5)
         line_array.extend(["@SP", "AM=M-1", "D=M", "@ARG", "A=M", "M=D"])                       # *ARG = pop() (get return value (SP-1) onto arg)
         line_array.extend(["@ARG", "D=M", "@SP", "M=D+1"])                                      # SP = ARG + 1
         line_array.extend(["@endFrame", "D=M", "@1", "D=D-A", "A=D", "D=M", "@THAT", "M=D"])    # THAT = (*endFrame - 1)
         line_array.extend(["@endFrame", "D=M", "@2", "D=D-A", "A=D", "D=M", "@THIS", "M=D"])    # THIS = (*endFrame - 2)
         line_array.extend(["@endFrame", "D=M", "@3", "D=D-A", "A=D", "D=M", "@ARG", "M=D"])     # ARG = (*endFrame - 3)
         line_array.extend(["@endFrame", "D=M", "@4", "D=D-A", "A=D", "D=M", "@LCL", "M=D"])     # LCL = (*endFrame - 4)
-        line_array.extend(["@retAddr", "A=M"])                                                  # goto retAddr
+        line_array.extend(["@retAddr", "A=M", "0;JMP"])                                         # goto retAddr
 
     return line_array
-
-def translate(machine_code, file_name, file_in):
-    """ Determines what type of command each vm line contains and calls functions accordingly
-    Args:
-        machine_code (np array) :   Resultant hack commands from each line of file_in
-        file_name (str)         :   Name of input file
-        file_in (str)           :   String of input vm file
-    Returns:
+    
+def translate(machine_code: str, file_name: str, file_in: str):
+    """ Determines what type of command each vm line contains and calls functions accordingly \n
+    Args: \n
+        machine_code (np array) :   Resultant hack commands from each line of file_in \n
+        file_name (str)         :   Name of input file 
+        file_in (str)           :   String of input vm file \n
+    Returns: \n
         Machine code array based on input vm file
     """
 
     arith_count = 0 # Arithmetic counter
+    call_count = 0
 
     for line in file_in:
 
@@ -190,7 +199,8 @@ def translate(machine_code, file_name, file_in):
         if checkIgnoreLine(line):
             continue
 
-        machine_code.append(f"// {line}")
+        if comments_enabled:
+            machine_code.append(f"// {line}")
         line = line.replace("\n","").split(" ")
 
         if line[0] in push_pop_commands:
@@ -201,34 +211,68 @@ def translate(machine_code, file_name, file_in):
         elif line[0] in branching_commands:
             machine_code.extend(branching(line[0], line[1]))
         elif line[0] in function_commands:
+            # Save changings func args, just add empty array elems to return
             if line[0] == "return":
-                line.extend(["", ""]) # Save changings func args, just add empty array elems to return
-            machine_code.extend(func(line[0], line[1], line[2]))
+                line.extend(["", ""]) 
+            if line[0] == "call":
+                call_count = call_count + 1
+            machine_code.extend(func(line[0], line[1], line[2], file_name, call_count))
 
     return machine_code
+
+def bootstrap():
+    line_array = []
+    line_array.extend(["@256", "D=A", "@SP", "M=D", "@LCL", "MD=-1", "@ARG", "MD=D-1", "@THIS", "MD=D-1", "@THAT", "M=D-1"])
+    return line_array
 
 # This allows you to run the script through command line
 if __name__ == "__main__":
 
     # Do OS pathing for submission
-    file_in = sys.argv[1].strip("\/")
-    file_outpath = os.path.dirname(file_in)
-    file_outname = os.path.basename(file_in)
-    file_directory = os.path.join(file_outpath, file_outname)
-    file_out = f"{os.path.join(file_directory, file_outname)}.asm"
+    file_in = os.path.basename(sys.argv[1])
+    file_directory = os.path.dirname(sys.argv[1])
+    
+    # If no file choose directory as file name 
+    if not file_in:
+        file_in = os.path.basename(file_directory)
+
+    if not file_directory:
+        file_directory = file_in
+
+    file_out = f"{os.path.join(file_directory, file_in.strip('.vm'))}.asm"
 
     machine_code = []
 
-    # Process Sys.vm first
-    if os.path.isfile(os.path.join(file_directory, "Sys.vm")):
-        file_read = open(os.path.join(file_directory, "Sys.vm"), "r")
-        machine_code = translate(machine_code, "Sys", file_read)
+    sys_exists = os.path.isfile(os.path.join(file_directory, "Sys.vm"))   
+        
+    # Process Sys.init call first
+    if sys_exists: 
+        # Add bootstrap code
+        machine_code.extend(bootstrap())
+        # Call to Sys.init
+        machine_code.extend(["// call Sys.init 0"])
+        machine_code.extend(func("call", "Sys.init", "0", "Sys", 0))
 
     # Process all others after
-    for file in os.listdir(file_in):
+    logging.warning("######START######")
+    logging.warning(f"{sys.argv[1]}")
+    logging.warning(f"{file_in}")
+    logging.warning(f"{file_directory}")
+    logging.warning("#######END#######")
+
+    for file in os.listdir(file_directory):
         if file.endswith(".vm") and file != "Sys.vm":
-            machine_code = translate(machine_code, file.strip(".vm"), file_read)
+            read = os.path.join(file_directory, file)
+            if os.path.isfile(read):
+                file_read = open(read, "r")
+                machine_code = translate(machine_code, file.strip(".vm"), file_read)
+
+    # Process function Sys.init
+    if sys_exists:
+        file_read = open(os.path.join(file_directory, "Sys.vm"), "r")
+        machine_code = translate(machine_code, "Sys", file_read)
 
     with open(file_out, "w") as out:
         for line in machine_code:
             out.write("".join(line) + "\n")
+            

@@ -98,12 +98,12 @@ M=M+1
 D=M
 @endFrame
 M=D
+@5
+D=D-A
+A=D
+D=M
 @retAddr
 M=D
-@5
-D=A
-@retAddr
-M=M-D
 @SP
 AM=M-1
 D=M
@@ -148,3 +148,4 @@ D=M
 M=D
 @retAddr
 A=M
+0;JMP
