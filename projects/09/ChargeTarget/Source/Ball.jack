@@ -1,0 +1,77 @@
+class Ball {
+
+   field int x, y; // screen location of the ball's top-left corner
+   field int size; // length of this ball, in pixels
+
+   // Screen is 512 by 256 (8192)
+   field int memAddress; // Position of the ball
+   static int screen; 
+
+   constructor Ball new(int screenPosition) {
+      let screen = 16384; // Start point of screen map in memory (should really be a const outside of object but this'll do)
+      do draw(screenPosition);
+
+      return this;
+   }
+
+   /* Clean up this ball instance */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /* Draw ball based on location */
+   method void draw(int location) {
+      let memAddress = screen+location; 
+      do Memory.poke(memAddress+0, 2016);
+      do Memory.poke(memAddress+32, 6168);
+      do Memory.poke(memAddress+64, 9988);
+      do Memory.poke(memAddress+96, 24770);
+      do Memory.poke(memAddress+128, 23602);
+      do Memory.poke(memAddress+160, -15605);
+      do Memory.poke(memAddress+192, -20283);
+      do Memory.poke(memAddress+224, -29655);
+      do Memory.poke(memAddress+256, -28141);
+      do Memory.poke(memAddress+288, -23195);
+      do Memory.poke(memAddress+320, -22135);
+      do Memory.poke(memAddress+352, 27154);
+      do Memory.poke(memAddress+384, 19042);
+      do Memory.poke(memAddress+416, 9604);
+      do Memory.poke(memAddress+448, 6808);
+      do Memory.poke(memAddress+480, 2016);
+      return;
+   }
+
+   /* Erase ball based on location*/
+   method void erase(int location) {
+      let memAddress = 16384+location;
+      do Memory.poke(memAddress+0, 0);
+      do Memory.poke(memAddress+32, 0);
+      do Memory.poke(memAddress+64, 0);
+      do Memory.poke(memAddress+96, 0);
+      do Memory.poke(memAddress+128, 0);
+      do Memory.poke(memAddress+160, 0);
+      do Memory.poke(memAddress+192, 0);
+      do Memory.poke(memAddress+224, 0);
+      do Memory.poke(memAddress+256, 0);
+      do Memory.poke(memAddress+288, 0);
+      do Memory.poke(memAddress+320, 0);
+      do Memory.poke(memAddress+352, 0);
+      do Memory.poke(memAddress+384, 0);
+      do Memory.poke(memAddress+416, 0);
+      do Memory.poke(memAddress+448, 0);
+      do Memory.poke(memAddress+480, 0);
+      return;
+   }
+
+   /* Gets direct memory address of current ball position */
+   method int getMemAddress() {
+      return memAddress;
+   }
+
+   /* Gets location of current ball position on screen */
+   method int getMemLocation() {
+      return memAddress-screen;
+   }
+
+}

@@ -1,0 +1,12 @@
+
+
+/* Initialises and starts ChargeTarget game */
+class Main {
+    function void main() {
+        var ChargeTarget game;
+        let game = ChargeTarget.new();
+        do game.start();
+        do game.dispose();
+        return;
+    }
+}

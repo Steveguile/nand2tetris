@@ -1,0 +1,38 @@
+/**
+	Moving dot is just moving point inside a grid
+	I made it just for initial project for grid based games
+
+	working:
+		Enter not of rows and columns;
+		adjust currernt cursor in grid using arrow buttons;
+*/
+
+
+
+class Main
+{
+	function void main()
+	{
+		//creating 
+		var Loop cursor;
+		var int rows;
+		var int cols;
+
+		// reading the inputs from user
+		let rows = Keyboard.readInt("Enter No of rows(2-12): ");
+		let cols = Keyboard.readInt("Enter No of columns:(2,9) ");
+
+		//Initial cleaning for creating the graphics
+		do Screen.clearScreen();
+
+		//calling the constructor
+		let cursor = Loop.new(rows,cols);
+
+		//creating gameLoop
+		do cursor.loop();
+
+		//cleaning the memory
+		do cursor.dispose();
+		return ;
+	}
+}

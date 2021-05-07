@@ -1,0 +1,590 @@
+function LunarLander.new 0
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push pointer 0
+call LunarLander.drawTarget 1
+pop temp 0
+push pointer 0
+call LunarLander.draw 1
+pop temp 0
+push pointer 0
+return
+function LunarLander.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function LunarLander.draw 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 10
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 30
+add
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push this 1
+push constant 5
+add
+push this 0
+push constant 5
+add
+push this 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 35
+add
+push this 1
+push constant 5
+add
+push this 0
+push constant 40
+add
+push this 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push this 1
+push constant 30
+add
+push this 0
+push constant 7
+add
+push this 1
+push constant 35
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 34
+add
+push this 1
+push constant 30
+add
+push this 0
+push constant 40
+add
+push this 1
+push constant 35
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push this 1
+push constant 35
+add
+push this 0
+push constant 4
+add
+push this 1
+push constant 40
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 36
+add
+push this 1
+push constant 35
+add
+push this 0
+push constant 40
+add
+push this 1
+push constant 40
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push this 1
+push constant 40
+add
+push this 0
+push constant 2
+add
+push this 1
+push constant 48
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 38
+add
+push this 1
+push constant 40
+add
+push this 0
+push constant 40
+add
+push this 1
+push constant 48
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 9
+add
+push this 1
+push constant 38
+add
+push this 0
+push constant 18
+add
+push this 1
+push constant 39
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 22
+add
+push this 1
+push constant 38
+add
+push this 0
+push constant 31
+add
+push this 1
+push constant 39
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 9
+add
+push this 1
+push constant 39
+add
+push this 0
+push constant 17
+add
+push this 1
+push constant 40
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 23
+add
+push this 1
+push constant 39
+add
+push this 0
+push constant 31
+add
+push this 1
+push constant 40
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 9
+add
+push this 1
+push constant 40
+add
+push this 0
+push constant 16
+add
+push this 1
+push constant 41
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 24
+add
+push this 1
+push constant 40
+add
+push this 0
+push constant 31
+add
+push this 1
+push constant 42
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 9
+add
+push this 1
+push constant 41
+add
+push this 0
+push constant 15
+add
+push this 1
+push constant 42
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 25
+add
+push this 1
+push constant 41
+add
+push this 0
+push constant 31
+add
+push this 1
+push constant 42
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 6
+add
+push this 1
+push constant 42
+add
+push this 0
+push constant 14
+add
+push this 1
+push constant 48
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 26
+add
+push this 1
+push constant 42
+add
+push this 0
+push constant 34
+add
+push this 1
+push constant 48
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 14
+add
+push this 1
+push constant 45
+add
+push this 0
+push constant 26
+add
+push this 1
+push constant 48
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 8
+add
+push this 1
+push constant 48
+add
+push this 0
+push constant 32
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 14
+add
+push this 1
+push constant 6
+add
+push this 0
+push constant 16
+add
+push this 1
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 24
+add
+push this 1
+push constant 6
+add
+push this 0
+push constant 26
+add
+push this 1
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 12
+add
+push this 1
+push constant 8
+add
+push this 0
+push constant 16
+add
+push this 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 24
+add
+push this 1
+push constant 8
+add
+push this 0
+push constant 28
+add
+push this 1
+push constant 10
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 10
+add
+push this 1
+push constant 10
+add
+push this 0
+push constant 16
+add
+push this 1
+push constant 12
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 24
+add
+push this 1
+push constant 10
+add
+push this 0
+push constant 30
+add
+push this 1
+push constant 12
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function LunarLander.drawTarget 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push constant 220
+push constant 235
+push constant 230
+push constant 255
+call Screen.drawRectangle 4
+pop temp 0
+push constant 270
+push constant 235
+push constant 280
+push constant 255
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function LunarLander.moveUp 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 1
+push argument 1
+sub
+pop this 1
+push pointer 0
+call LunarLander.draw 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function LunarLander.moveDown 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 50
+add
+push constant 254
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 1
+push argument 1
+add
+pop this 1
+push pointer 0
+call LunarLander.draw 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function LunarLander.moveLeft 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 1
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push argument 1
+sub
+pop this 0
+push pointer 0
+call LunarLander.draw 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function LunarLander.moveRight 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 40
+add
+push constant 510
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 40
+add
+push this 1
+push constant 50
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push argument 1
+add
+pop this 0
+push pointer 0
+call LunarLander.draw 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return

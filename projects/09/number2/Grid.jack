@@ -1,0 +1,125 @@
+/** 
+	Implement grqphics drawing methods in it.
+	It maitains the current cursor position and no of rows and columns of grid and 
+	those drawing methods;
+*/
+
+
+class Grid
+{
+	// no of rows and cols for grid
+	field int rows;
+	field int cols;
+
+	// Width and height of each cell in grid
+	field int cellWidth;
+	field int cellHeight;
+
+	//cursor position in grid
+	field int currX;
+	field int currY;
+
+	constructor Grid new(int r,int c)
+	{
+		/**
+			Initilize the grid 
+		*/
+		let rows = r;
+		let cols = c;
+		let cellWidth = 508/r;
+		let cellHeight = 252/c;
+		
+		let currX = 0;
+		let currY = 0;
+
+		return this;
+	}
+
+	method void drawGrid()
+	{
+
+		/**
+			for drawing the grid borders
+		*/
+		var int i;
+		var int j;
+		let  i = 0;
+		let j = 0;
+		
+		while(i<rows)
+		{
+			do Screen.drawLine(i*cellWidth+1,1,i*cellWidth+1,255);
+			let i= i+1;
+		}
+		while(j<cols)
+		{
+			do Screen.drawLine(1,j*cellHeight+1,511,j*cellHeight+1);
+			let j = j+1;
+		}
+		return ;
+	}
+
+	method void drawBlink(bool blink)
+	{
+		/**
+			Drawing blinking cursor it takes blink value as set(true)/unset(false)
+		*/
+		var int posx;
+		var int posy;
+		let posx = currX*cellWidth;
+		let posy = currY*cellHeight;
+		do Screen.setColor(blink);
+		do Screen.drawRectangle(posx,posy,posx+cellWidth,posy+cellHeight);
+		return ;
+	}
+
+	method void updatePos(int direction)
+	{
+		/**
+			handling the keyboard moments to move cursor
+		*/
+		if(direction = 0)
+		{
+			if(currX > 0)
+			{
+				let currX = currX -1;
+			}
+		}
+		
+		if(direction = 3)
+		{
+			if(currX< (rows-1))
+			{
+				let currX = currX+1;
+			}
+		}
+
+		if(direction = 2)
+		{
+			if(currY>0)
+			{
+				let currY = currY-1;
+			}
+		}
+
+		if(direction = 1)
+		{
+			if(currY< (cols-1))
+			{
+				let currY = currY + 1;
+			}
+		}
+		return ;
+	}
+
+
+
+	method void dispose()
+	{
+		/**
+			cleaning the current object from memory
+		*/
+		do Memory.deAlloc(this);
+		return ;
+	}
+}	

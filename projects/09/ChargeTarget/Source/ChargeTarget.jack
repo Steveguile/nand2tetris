@@ -1,0 +1,144 @@
+
+class ChargeTarget {
+
+   field Ball ball;     // Ball object
+   field Hoop hoop;     // Hoop object 
+   field bool hasShot; // Has the user taken a shot 
+   field int score;  // Current score
+   static int rightEnd; // Furthest point a ball can be positioned to the right
+   static int leftEnd; // Furst point a ball can be positioned to the left
+   static bool slideRight; // Direction of slide at bottom 
+   static int hoopPos;   // Hoop position
+
+   constructor ChargeTarget new() {
+      // 16 row from bottom (8192 (screen map) - (16 x 32 (16 rows)) + 15 (for halfway point of screen and ball))
+      let ball = Ball.new(7695);
+
+      // 20 rows from top (40 x 32 (16 rows) + 15 (for halfway point of screen and hoop)))
+      let hoopPos = 1295;
+      let hoop = Hoop.new(hoopPos);
+
+      // 16 row from bottom (8192 (screen map) - (16 x 32 (16 rows)))
+      let leftEnd = 7680;
+
+      // // 16 row from bottom (8192 (screen map) - (16 x 32 (16 rows) + 31 (for end position minus ball size))
+      let rightEnd = 7711;
+
+      // Print starting score
+      do Output.printInt(score);
+
+      return this;
+   }
+
+   method void dispose() {
+      do ball.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /* slides ball in direction */
+   method void slideBall() {
+      var int slider;
+      let slider = ball.getMemLocation();
+      do ball.erase(slider); // Remove current ball
+
+      // Go right 
+      if (slideRight) { 
+         let slider = slider + 1; 
+         if (slider = rightEnd) { let slideRight = false; } // Set direction to get left 
+      } else {
+         // Go left 
+         let slider = slider - 1;
+         if (slider = leftEnd) { let slideRight = true; } // Set direction to go right
+      }
+
+      do ball.draw(slider);     
+
+      return;
+   }
+
+   /* Shoots ball after releasing space where charge is x pixels in positive y axis*/
+   method void shootBall(int charge) {
+      var int distance;     // Distance ball travelled 
+      var int ballPosition; // Current position of ball
+      var bool scored;  // Result from checkWinCondition as it doesn't like being in condition itself
+
+      let distance = 0;
+      let ballPosition = ball.getMemLocation();
+
+      while (distance < charge) {
+         let distance = distance + 1;
+         do ball.erase(ballPosition);
+
+         let ballPosition = ballPosition - 128; // Up a pixel each time
+
+         if (ballPosition > 0) { // Don't go outside of screen
+            do ball.draw(ballPosition);
+         } else {
+            let distance = charge + 1; // exit loop     
+         }
+
+         // if ball is just below hoop, redraw hoop
+         if (ballPosition < 1580) {
+            do hoop.draw(hoopPos);
+         }
+
+         do Sys.wait(10); // wait to re-loop
+
+      }
+
+      do ball.erase(ballPosition); // erase final ball
+
+      // See if the ball is in the hoop
+      let scored = hoop.inHoop(ballPosition);
+      if (scored) {
+         let score = score + 1;
+         do Output.backSpace();
+         do Output.printInt(score);
+      }
+
+      do hoop.draw(hoopPos); // Always redraw hoop when ball goes back to bottom
+      
+      return;
+   }
+
+   /* starts the ChargeTarget game and runs it */
+   method void start() {
+      var char key;  // the key currently pressed by the user
+      var boolean exit; // exit check
+      var bool shooting; // is the ball currently being shot
+      var bool charging; // is the shot currently charging
+      var int charge; // amount of charge the shot has behind it
+      let exit = false;
+
+      while (~exit) {
+
+         let key = Keyboard.keyPressed();
+         do Sys.wait(75);  // delays the next movement
+         if (shooting) {
+            do shootBall(charge); // Shoot ball at hoop
+            // re-initialise key variables
+            do ball.draw(7695); // redraw ball at start
+            let shooting = false; // no longer shooting
+            let charge = 0; // reset charge
+         } else {
+            do slideBall();   // slide ball along bottom row 
+         }
+
+         if (key = 81) { let exit = true; }     // q key
+         if (key = 32) { let charge = charge + 1; } // Add to charge
+
+         if (key = 0) {
+            // no AND I guess?
+            // shoot the ball
+            if (charge > 0) { let shooting = true; }
+         }
+
+     } // exit loop
+     return;
+   }
+
+}
+
+
+
