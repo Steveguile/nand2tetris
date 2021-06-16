@@ -11,33 +11,211 @@
  */
 class Screen {
 
+    static Array screen;
+    static boolean white;
+    static boolean black;
+    static boolean colour;
+
     /** Initializes the Screen. */
     function void init() {
+        let screen = 16384;
+        let white = false;
+        let black = true;
+        let colour = black; // default to true
+        return;
     }
 
     /** Erases the entire screen. */
     function void clearScreen() {
+        var int i;
+
+        let i = 0;
+        // Kiio through whole screen
+        while( i < 8192 ) {
+            let screen[i] = white;
+        }
+        return;
     }
 
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
+        let colour = b;
+        return;
     }
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
+        var int address;
+        var int position;
+
+        let address = (y*32) + (x/16);
+        let position = Math.powerTwo(x&15);
+
+        if(colour) {
+            let screen[address] = screen[address] | position;
+        }
+        else {
+            let screen[address] = screen[address] & ~position;
+        }
+
+        return;
     }
 
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
+        var int dx;
+        var int dy;
+        var int tmp;
+        
+        // Test that x1 <= x2
+        if( x1 > x2 ) {
+            let tmp = x1;
+            let x1 = x2;
+            let x2 = tmp;
+            let tmp = y1;
+            let y1 = y2;
+            let y2 = tmp;
+        }
+
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        
+        // Check if angle is upwards
+        if(dx = 0) {
+            do Screen.drawY(x1, y1, y2 );
+        }
+        else { 
+            // Check if angle is flat
+            if(dy = 0) {
+                do Screen.drawX(x1, x2, y1);
+            }
+            // Some angle
+            else {
+                do Screen.drawXY(x1, y1, x2, y2, dx, dy);
+            }
+        }
+        
+        return;
+    }
+
+    function void drawY(int x, int y1, int y2) {
+        var int tmp;
+        
+        // Ensure y1 <= y2, save adding logic later
+        if(y1 > y2) {
+            let tmp = y1;
+            let y1 = y2;
+            let y2 = tmp;
+        }
+        
+        while(~(y1 > y2)) {
+            do Screen.drawPixel(x, y1);
+            let y1 = y1 + 1;
+        }
+
+        return;
+    }
+
+    function void drawX(int x1, int x2, int y) {
+        var int start;
+        var int end;
+        var int x1mod16;
+        var int x2mod16;
+        
+        let x1mod16 = x1 & 15;
+        let x2mod16 = x2 & 15;
+        let start = (y*32) + (x1/16);
+        let end = (y*32) + (x2/16) + (x2mod16=0);
+
+        if( start = end ) {   // line starts and ends within the same screen address
+            do Screen.drawXNext(x1, x2, y);
+        }
+        else { 
+            if( ~(x1mod16 = 0) ) {      // Start of line
+                let start = start + 1;
+                do Screen.drawXNext(x1, x1+16-x1mod16, y);
+            }
+            if( ~(x2mod16 = 0) ) {      // End of line
+                let end = end - 1;
+                do Screen.drawXNext(x2-x2mod16, x2, y);
+            }
+            while( ~(start > end) ) {     // Middle of line
+                let screen[start] = colour;
+                let start = start + 1;
+            }
+        }
+        
+        return;
+    }
+
+    /** Draws next < 16 pixels on horizontal line
+     */
+    function void drawXNext(int x1, int x2, int y) {
+        while(~(x1 > x2)) {
+            do Screen.drawPixel(x1, y);
+            let x1 = x1 + 1;
+        }
+        return;
+    }
+
+    function void drawXY(int x1, int y1, int x2, int y2, int dx, int dy) {
+        var int a;
+        var int b;
+        var int angleCalc;
+        var int yAdd;
+
+        let a = 0;
+        let b = 0;
+        let angleCalc = 0;
+        
+        // Angling upwards
+        if(dy > -1) {
+            let yAdd = 1;
+        }
+        // Angling downwards
+        else {
+            let yAdd = -1;
+        }
+
+        while(~(a > dx) & (((yAdd = 1) & ~(b > dy)) | ((yAdd = -1) & ~(b < dy)))) {
+            do Screen.drawPixel(x1+a, y1+b);
+            if( angleCalc < 0 ) {
+                let a = a + 1;
+                let angleCalc = angleCalc + (dy*yAdd);
+            }
+            else {
+                let b = b + yAdd;
+                let angleCalc = angleCalc - dx;
+            }
+        }
+
+        return;
     }
 
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+        while(~(y1 > y2)) {
+            do Screen.drawX(x1, x2, y1);
+            let y1 = y1 + 1;
+        }
+        return;
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+        var int dx, dy;
+        var int rSquared;
+        
+        let dy = -r;
+        let rSquared = Math.multiply(r);
+        while(~(dy > r)) {
+            let dx = Math.sqrt(rSquared-(dy*dy));
+            do Screen.drawX(x-dx, x+dx, y+dy);
+            let dy = dy + 1;
+        }
+
+        return;
     }
 }

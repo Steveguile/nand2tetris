@@ -1,0 +1,220 @@
+<class>
+<keyword> class </keyword>
+<identifier> Main </identifier>
+<symbol> { </symbol>
+<subroutineDec>
+<keyword> function </keyword>
+<keyword> void </keyword>
+<identifier> main </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<varDec>
+<keyword> var </keyword>
+<identifier> Array </identifier>
+<local> a </local>
+<symbol> ; </symbol>
+</varDec>
+<varDec>
+<local> var </local>
+<keyword> int </keyword>
+<local> length </local>
+<symbol> ; </symbol>
+</varDec>
+<varDec>
+<local> var </local>
+<keyword> int </keyword>
+<local> i </local>
+<symbol> , </symbol>
+<local> sum </local>
+<symbol> ; </symbol>
+</varDec>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> length </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> Keyboard </local>
+<symbol> . </symbol>
+<local> readInt </local>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> How many numbers?  </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> a </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> Array </local>
+<symbol> . </symbol>
+<identifier> new </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> length </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> i </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<whileStatement>
+<local> while </local>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> i </local>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<local> length </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> a </local>
+<symbol> [ </symbol>
+<expression>
+<term>
+<local> i </local>
+</term>
+</expression>
+<symbol> ] </symbol>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> Keyboard </local>
+<symbol> . </symbol>
+<local> readInt </local>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> Enter a number:  </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> sum </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> sum </local>
+</term>
+<symbol> + </symbol>
+<term>
+<local> a </local>
+<symbol> [ </symbol>
+<expression>
+<term>
+<local> i </local>
+</term>
+</expression>
+<symbol> ] </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> i </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> i </local>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 1 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</whileStatement>
+<doStatement>
+<keyword> do </keyword>
+<identifier> Output </identifier>
+<symbol> . </symbol>
+<local> printString </local>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> The average is  </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<doStatement>
+<keyword> do </keyword>
+<identifier> Output </identifier>
+<symbol> . </symbol>
+<local> printInt </local>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> sum </local>
+</term>
+<symbol> / </symbol>
+<term>
+<local> length </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<symbol> } </symbol>
+</class>

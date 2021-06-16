@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as DM
 import html
+from SymbolTable import SymbolTable, SymbolKinds
+from VMWriter import VMWriter 
 
 class_var_dec_tokens = {"static", "field"}
 type_tokens = {"int", "char", "boolean"}
@@ -10,25 +12,30 @@ unary_op = {"-", "~"}
 keyword_constant = {"true", "false", "null", "this"}
 
 class CompilationEngine:
-    def __init__(self, in_file: str):
+    def __init__(self, in_file: str, compile_out_name: str):
 
-        self.compile_out = []
-        self.xml_out = ""
+        # self.compile_out = []
         self.tokens = []
         self.token_position = 0
+        self.last_tag = ""
+        self.last_token = ""
+        self.symbol_table = SymbolTable()
+        self.class_name = ""
+        self.function_type = ""
+        self.current_arguments = 0
+        self.current_expression = []
 
         # Assign file to array
         self.tokens = open(in_file).read().splitlines()            
         self.tokens = self.tokens[1:-1] # Remove <tokens> tags
 
+        self.vm_writer = VMWriter(compile_out_name)
+
         # Start compilation process
         self.compileClass()
+        self.vm_writer.close()
 
-        # Convert to xml
-        self.xml_out = DM.parseString(''.join(self.compile_out)).toprettyxml(indent="")
-        self.xml_out = self.xml_out.strip("<?xml version=\"1.0\" ?>").strip() # Gross but keep for coursera matching
-
-    def eat(self, eat_string: str = ""):
+    def eat(self, eat_string: str = "", force_tag: str = ""):
         """ Standard eat, move + 1 
         """
         current_token = ET.fromstring(self.tokens[self.token_position])
@@ -37,24 +44,31 @@ class CompilationEngine:
         else:
             # Keep token tags in append
             # Lazy method of doing this
-            self.compile_out.append(f"<{current_token.tag}> ")
-            self.compile_out.append(html.escape(current_token.text))
-            self.compile_out.append(f" </{current_token.tag}>")
+            self.last_token = html.escape(current_token.text)
+            
+            # Force tag from symbol table or keep?
+            if not force_tag:
+                self.last_tag = self.symbol_table.kindOf(self.last_token)
+                # If not in symbol table then choose current token tag
+                if not self.last_tag:
+                    self.last_tag = current_token.tag
+            else:
+                self.last_tag = force_tag
 
         # Move counter to next token
         self.token_position = self.token_position + 1
 
+    def eatForce(self, force_tag):
+        self.eat("", force_tag)
+
     def compileClass(self):
         """ 'class' className '{' classVarDec* subRoutineDec* '}'
         """
-        self.compile_out.append("<class>")
         self.eat("class")
 
         # ClassName
-        #self.compile_out.append("<className>")
         self.eat()
-        #self.compile_out.append("</className>")
-
+        self.class_name = self.last_token
         self.eat("{")
 
         # Compile one or more classVarDec or subRoutineDec
@@ -67,17 +81,16 @@ class CompilationEngine:
             else:
                 # No more, we leave
                 break
-                
-        self.eat("}")
 
-        self.compile_out.append("</class>")
+        self.eat("}")
 
     def compileClassVarDec(self):
         """ ('static'|'field') type varName (',' varName)* ';'
         """
-        self.compile_out.append("<classVarDec>")
         self.eat(class_var_dec_tokens)
+        symbol_kind = self.last_token
         self.eat()
+        symbol_type = self.last_token
 
         # (',' varName)* ';'
         while True:
@@ -87,54 +100,68 @@ class CompilationEngine:
                 self.eat(";") # Read the ";"
                 break
             else:
-                self.eat()
-
-        self.compile_out.append("</classVarDec>")
+                # "," or varName
+                if current_token.text == ",":
+                    self.eat()
+                else:
+                    self.eatForce(symbol_kind)
+                    self.symbol_table.define(self.last_token, symbol_type, symbol_kind)
 
     def compileSubroutineDec(self):
         """ ('constructor'|'function'|'method') ('void'|type) 
             subroutineName '(' parameterList ')' subroutineBody
         """
-        self.compile_out.append("<subroutineDec>")
+        # Initialise starts from parameter list - add arguments to symbol table
+        self.symbol_table.startSubroutine()
+
         self.eat(subroutine_dec_tokens)
+        if self.last_token == "method":
+            # Add "this" to argument list in symbol table
+            self.symbol_table.define("this", self.class_name, keyword)
         # void | type
         self.eat()
-
+        self.function_type = self.last_token
         # subroutineName
         self.eat()
+        function = self.last_token
 
         self.eat("(")
         self.compileParameterList()
         self.eat(")")
 
+        params = self.symbol_table.kindOf("argument")
+        if not params:
+            params = 0
+        self.vm_writer.writeFunction(f"{self.class_name}.{function}", params)
+
         self.compileSubroutineBody()
 
-        self.compile_out.append("</subroutineDec>")
 
     def compileParameterList(self):
         """ ((type varName) (',' type varName)*)?
         """        
-        self.compile_out.append("<parameterList>")
+
+        keyword = "argument"
+        self.param_count = 0
 
         current_token = ET.fromstring(self.tokens[self.token_position]).text
-        if current_token != ")":
+        while current_token != ")":
             self.eat()
-            self.eat()
-            
+            symbol_type = self.last_token
+            self.eatForce(keyword)
+            symbol_name = self.last_token
+            # Add to symbol table
+            self.symbol_table.define(symbol_name, symbol_type, keyword)
+            self.param_count = self.param_count + 1
+            # Check for another parameter
             current_token = ET.fromstring(self.tokens[self.token_position]).text
-            while current_token == ",":
-                self.eat(",")
-                self.eat()
-                self.eat()
-                current_token = ET.fromstring(self.tokens[self.token_position]).text
-
-        self.compile_out.append("</parameterList>")
+            if current_token != ",":
+                break
+            self.eat(",")
 
     def compileSubroutineBody(self):
         """ '{' varDec* statements '}'
         """
-        self.compile_out.append("<subroutineBody>")
-
         self.eat("{")
 
         # varDec*
@@ -148,19 +175,14 @@ class CompilationEngine:
 
         self.eat("}")
 
-        self.compile_out.append("</subroutineBody>")
-
     def compileVarDec(self):
         """ 'var' type varName (',' varName)* ';'
         """
-        self.compile_out.append("<varDec>")
-
-        # 'var'
         self.eat("var")
+        symbol_kind = "local"
         # type
         self.eat()
-        # varName
-        self.eat()
+        symbol_type = self.last_token
 
         # (',' varName)* ';'
         while True:
@@ -170,12 +192,14 @@ class CompilationEngine:
                 self.eat(";") # Read the ";"
                 break
             else:
-                self.eat()
-
-        self.compile_out.append("</varDec>")
+                # "," or varName
+                if current_token.text == ",":
+                    self.eat()
+                else:
+                    self.eatForce(symbol_kind)
+                    self.symbol_table.define(self.last_token, symbol_type, symbol_kind)
 
     def compileStatements(self):
-        self.compile_out.append("<statements>")
 
         while True:
             current_token = ET.fromstring(self.tokens[self.token_position]).text
@@ -192,14 +216,11 @@ class CompilationEngine:
             else:
                 break
 
-        self.compile_out.append("</statements>")
 
     def compileLet(self):
         """ 'let' varName ('[' expression ']')? '=' expression ';'
         """
-        self.compile_out.append("<letStatement>")
 
-        # 'let'
         self.eat("let")
         # varName
         self.eat()
@@ -215,17 +236,20 @@ class CompilationEngine:
 
         self.compileExpression()
 
+        self.codeWrite(self.current_expression)
+
         self.eat(";")
 
-        self.compile_out.append("</letStatement>")
 
     def compileIf(self):
-        self.compile_out.append("<ifStatement>")
 
         self.eat("if")
         self.eat("(")
         self.compileExpression()
         self.eat(")")
+
+        self.codeWrite(self.current_expression)
+
         self.eat("{")
         self.compileStatements()
         self.eat("}")
@@ -238,28 +262,27 @@ class CompilationEngine:
             self.eat("}")
             current_token = ET.fromstring(self.tokens[self.token_position]).text
 
-        self.compile_out.append("</ifStatement>")
 
     def compileWhile(self):
-        self.compile_out.append("<whileStatement>")
 
         self.eat("while")
         self.eat("(")
         self.compileExpression()
         self.eat(")")
+
+        self.codeWrite(self.current_expression)
+
         self.eat("{")
         self.compileStatements()
         self.eat("}")
 
-        self.compile_out.append("</whileStatement>")
-
     def compileDo(self):
-        self.compile_out.append("<doStatement>")
 
         self.eat("do")
         
-        # subroutineName of subroutineCall
+        # subroutineName or subroutineCall
         self.eat()
+        call = self.last_token
 
         current_token = ET.fromstring(self.tokens[self.token_position]).text
         # subroutineCall - subroutineName '(' expressionList ')'
@@ -271,18 +294,26 @@ class CompilationEngine:
         elif current_token == ".":
             self.eat(".")
             self.eat()
+            call = f"{call}.{self.last_token}"
             self.eat("(")
             self.compileExpressionList()
             self.eat(")") 
 
+        self.vm_writer.writeCall(call, self.current_arguments)
+
+        # "do" must pop top most value from stack
+        self.vm_writer.writePop("temp", 0)
+
         self.eat(";")
 
-        self.compile_out.append("</doStatement>")
-
     def compileReturn(self):
-        self.compile_out.append("<returnStatement>")
+
+        if self.function_type == "void":
+            # Must push something
+            self.vm_writer.writePush("constant", 0)
 
         self.eat("return")
+        self.vm_writer.writeReturn()
 
         current_token = ET.fromstring(self.tokens[self.token_position]).text
         while current_token != ";":
@@ -291,30 +322,62 @@ class CompilationEngine:
 
         self.eat(";")
 
-        self.compile_out.append("</returnStatement>")
-
     def compileExpression(self):
         """ term (op term)*
         """
-        self.compile_out.append("<expression>")
 
         self.compileTerm()
 
         # Grammar says (op term)* but think should be (op term)?
         current_token = ET.fromstring(self.tokens[self.token_position]).text
         while current_token in op:
+            self.current_expression.append(current_token)
             self.eat(op)
             self.compileTerm()
             current_token = ET.fromstring(self.tokens[self.token_position]).text
 
-        self.compile_out.append("</expression>")
+    def codeWrite(self, expression_list):
+
+        if not expression_list[0].isnumeric():
+            # Maybe function? In form of func( or Obj.func(
+            if len(expression_list) > 1:
+                print(expression_list)
+                if (expression_list[1] == "(" or expression_list[3] == "("):
+                    start_func = expression_list.index("(")
+                    end_func = expression_list.index(")")
+                    for i in range(start_func, end_func, 2):
+                        self.codeWrite(expression_list[i:])
+
+                    # No args as of yet - wait till it breaks
+                    if start_func == 1:
+                        self.vm_writer.writeCall(expression_list[0])
+                    else:
+                        self.vm_writer.writeCall(expression_list[0:2])
+                elif expression_list[0] == "(":
+                    self.codeWrite(expression_list[1:])
+                else: # Varible
+                    self.vm_writer.writePush(self.symbol_table.kindOf(expression_list[0]), self.symbol_table.indexOf(expression_list[0]))
+            else: # Varible
+                self.vm_writer.writePush(self.symbol_table.kindOf(expression_list[0]), self.symbol_table.indexOf(expression_list[0]))
+        else:
+            if expression_list[0] in unary_op:
+                self.codeWrite(expression_list[1:])
+                self.vm_writer.writeArithmetic(expression_list[0])
+            elif len(expression_list) > 1:
+                if expression_list[1] in op:
+                    self.codeWrite(expression_list[0])
+                    self.codeWrite(expression_list[2:])
+                    self.vm_writer.writeArithmetic(expression_list[1])            
+                else: 
+                    self.vm_writer.writePush("constant", expression_list[0])
+            else: 
+                self.vm_writer.writePush("constant", expression_list[0])
 
     def compileTerm(self):
         """ integerConstant | stringConstant | keywordConstant | 
             varName | varName '[' expression ']' | subroutineCall |
             '(' expression ')' | unaryOp term
         """
-        self.compile_out.append("<term>")
 
         current_token = ET.fromstring(self.tokens[self.token_position]).text
         
@@ -326,17 +389,21 @@ class CompilationEngine:
             self.eat(keyword_constant)
         elif current_token == "(": # '(' expression ')'
             self.eat("(")
+            self.current_expression.append(self.last_token)
             self.compileExpression()
             self.eat(")") 
+            self.current_expression.append(self.last_token)
         else: # integerConstant | stringConstant | subroutineCall | varName | varName '[' expression ']'
             self.eat()
+            self.current_expression.append(current_token)
 
             current_token = ET.fromstring(self.tokens[self.
             token_position]).text 
+
             # '[' expression ']' part of varName '[' expression ']'
             if current_token == "[":
                 self.eat("[")
-                self.compileExpressionList()
+                self.compileExpression()
                 self.eat("]")
             # subroutineCall - subroutineName '(' expressionList ')'
             elif current_token == "(":
@@ -351,23 +418,28 @@ class CompilationEngine:
                 self.compileExpressionList()
                 self.eat(")") 
 
-        self.compile_out.append("</term>")
-
     def compileExpressionList(self):
         """ (expression (',' expression)*)?
         """
-        self.compile_out.append("<expressionList>")
+
+        self.current_arguments = 0
 
         current_token = ET.fromstring(self.tokens[self.token_position]).text 
         # Not empty expressionList ( -> ')'
         if current_token != ")":
             self.compileExpression()
+
+            print(self.current_expression)
+            self.codeWrite(self.current_expression)
+
+            self.current_arguments = self.current_arguments + 1
             current_token = ET.fromstring(self.tokens[self.token_position]).text 
             while current_token == ",":
                 self.eat(",")
                 self.compileExpression()
+
+                self.codeWrite(self.current_expression)
+
+                self.current_arguments = self.current_arguments + 1
                 current_token = ET.fromstring(self.tokens[self.token_position]).text 
-
-
-        self.compile_out.append("</expressionList>")
 

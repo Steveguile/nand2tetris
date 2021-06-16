@@ -1,0 +1,1859 @@
+<class>
+<keyword> class </keyword>
+<identifier> Ball </identifier>
+<symbol> { </symbol>
+<classVarDec>
+<keyword> field </keyword>
+<keyword> int </keyword>
+<field> x </field>
+<symbol> , </symbol>
+<field> y </field>
+<symbol> ; </symbol>
+</classVarDec>
+<classVarDec>
+<keyword> field </keyword>
+<keyword> int </keyword>
+<field> lengthx </field>
+<symbol> , </symbol>
+<field> lengthy </field>
+<symbol> ; </symbol>
+</classVarDec>
+<classVarDec>
+<keyword> field </keyword>
+<keyword> int </keyword>
+<field> d </field>
+<symbol> , </symbol>
+<field> straightD </field>
+<symbol> , </symbol>
+<field> diagonalD </field>
+<symbol> ; </symbol>
+</classVarDec>
+<classVarDec>
+<field> field </field>
+<keyword> boolean </keyword>
+<field> invert </field>
+<symbol> , </symbol>
+<field> positivex </field>
+<symbol> , </symbol>
+<field> positivey </field>
+<symbol> ; </symbol>
+</classVarDec>
+<classVarDec>
+<field> field </field>
+<keyword> int </keyword>
+<field> leftWall </field>
+<symbol> , </symbol>
+<field> rightWall </field>
+<symbol> , </symbol>
+<field> topWall </field>
+<symbol> , </symbol>
+<field> bottomWall </field>
+<symbol> ; </symbol>
+</classVarDec>
+<classVarDec>
+<field> field </field>
+<keyword> int </keyword>
+<field> wall </field>
+<symbol> ; </symbol>
+</classVarDec>
+<subroutineDec>
+<keyword> constructor </keyword>
+<identifier> Ball </identifier>
+<identifier> new </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<keyword> int </keyword>
+<argument> Ax </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> Ay </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> AleftWall </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> ArightWall </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> AtopWall </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> AbottomWall </argument>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> Ax </argument>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> Ay </argument>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> leftWall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> AleftWall </argument>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> rightWall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> ArightWall </argument>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 6 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> topWall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> AtopWall </argument>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> bottomWall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> AbottomWall </argument>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 6 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> wall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<doStatement>
+<field> do </field>
+<identifier> show </identifier>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<expression>
+<term>
+<argument> this </argument>
+</term>
+</expression>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<field> dispose </field>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<doStatement>
+<field> do </field>
+<field> Memory </field>
+<symbol> . </symbol>
+<field> deAlloc </field>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<argument> this </argument>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<identifier> show </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<doStatement>
+<field> do </field>
+<identifier> Screen </identifier>
+<symbol> . </symbol>
+<identifier> setColor </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<keyword> true </keyword>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<doStatement>
+<field> do </field>
+<field> draw </field>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<field> hide </field>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<doStatement>
+<field> do </field>
+<identifier> Screen </identifier>
+<symbol> . </symbol>
+<identifier> setColor </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<keyword> false </keyword>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<doStatement>
+<field> do </field>
+<field> draw </field>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<field> draw </field>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<doStatement>
+<field> do </field>
+<identifier> Screen </identifier>
+<symbol> . </symbol>
+<field> drawRectangle </field>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<field> x </field>
+</term>
+</expression>
+<symbol> , </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+</expression>
+<symbol> , </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 5 </integerConstant>
+</term>
+</expression>
+<symbol> , </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 5 </integerConstant>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<keyword> int </keyword>
+<identifier> getLeft </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<returnStatement>
+<keyword> return </keyword>
+<expression>
+<term>
+<field> x </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<keyword> int </keyword>
+<identifier> getRight </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<returnStatement>
+<keyword> return </keyword>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 5 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<identifier> setDestination </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<keyword> int </keyword>
+<argument> destx </argument>
+<symbol> , </symbol>
+<keyword> int </keyword>
+<argument> desty </argument>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<varDec>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<local> dx </local>
+<symbol> , </symbol>
+<local> dy </local>
+<symbol> , </symbol>
+<local> temp </local>
+<symbol> ; </symbol>
+</varDec>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> lengthx </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> destx </argument>
+</term>
+<symbol> - </symbol>
+<term>
+<field> x </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> lengthy </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<argument> desty </argument>
+</term>
+<symbol> - </symbol>
+<term>
+<field> y </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> dx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> Math </identifier>
+<symbol> . </symbol>
+<identifier> abs </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<field> lengthx </field>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> dy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<identifier> Math </identifier>
+<symbol> . </symbol>
+<identifier> abs </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<field> lengthy </field>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> invert </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> dx </local>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<local> dy </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> invert </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> temp </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> dx </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> dx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> dy </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> dy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<local> temp </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> positivex </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<argument> desty </argument>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> positivey </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<argument> destx </argument>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> positivex </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<argument> destx </argument>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> positivey </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<argument> desty </argument>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> d </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<integerConstant> 2 </integerConstant>
+</term>
+<symbol> * </symbol>
+<term>
+<local> dy </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> - </symbol>
+<term>
+<local> dx </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> straightD </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 2 </integerConstant>
+</term>
+<symbol> * </symbol>
+<term>
+<local> dy </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> diagonalD </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 2 </integerConstant>
+</term>
+<symbol> * </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> dy </local>
+</term>
+<symbol> - </symbol>
+<term>
+<local> dx </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<keyword> int </keyword>
+<identifier> move </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<statements>
+<doStatement>
+<field> do </field>
+<field> hide </field>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> d </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> d </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> d </field>
+</term>
+<symbol> + </symbol>
+<term>
+<field> straightD </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> d </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> d </field>
+</term>
+<symbol> + </symbol>
+<term>
+<field> diagonalD </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> positivey </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> invert </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> invert </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> positivex </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> invert </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> invert </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ~ </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> &gt; </symbol>
+<term>
+<field> leftWall </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> wall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 1 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> leftWall </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ~ </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<field> rightWall </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> wall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 2 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> x </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> rightWall </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ~ </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> &gt; </symbol>
+<term>
+<field> topWall </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> wall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 3 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> topWall </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ~ </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<field> bottomWall </field>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<field> wall </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 4 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<field> y </field>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> bottomWall </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<doStatement>
+<field> do </field>
+<identifier> show </identifier>
+<symbol> ( </symbol>
+<expressionList>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<expression>
+<term>
+<field> wall </field>
+</term>
+</expression>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<subroutineDec>
+<field> method </field>
+<field> void </field>
+<identifier> bounce </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<keyword> int </keyword>
+<argument> bouncingDirection </argument>
+</parameterList>
+<symbol> ) </symbol>
+<subroutineBody>
+<symbol> { </symbol>
+<varDec>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<local> newx </local>
+<symbol> , </symbol>
+<local> newy </local>
+<symbol> , </symbol>
+<local> divLengthx </local>
+<symbol> , </symbol>
+<local> divLengthy </local>
+<symbol> , </symbol>
+<local> factor </local>
+<symbol> ; </symbol>
+</varDec>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> divLengthx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> lengthx </field>
+</term>
+<symbol> / </symbol>
+<term>
+<integerConstant> 10 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> divLengthy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> lengthy </field>
+</term>
+<symbol> / </symbol>
+<term>
+<integerConstant> 10 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<argument> bouncingDirection </argument>
+</term>
+<symbol> = </symbol>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> factor </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 10 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ~ </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> lengthx </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> &amp; </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<argument> bouncingDirection </argument>
+</term>
+<symbol> = </symbol>
+<term>
+<integerConstant> 1 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> | </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> lengthx </field>
+</term>
+<symbol> &lt; </symbol>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> &amp; </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<argument> bouncingDirection </argument>
+</term>
+<symbol> = </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 1 </integerConstant>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> factor </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 20 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> factor </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 5 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> wall </field>
+</term>
+<symbol> = </symbol>
+<term>
+<integerConstant> 1 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 506 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> divLengthy </local>
+</term>
+<symbol> * </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 50 </integerConstant>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> / </symbol>
+<term>
+<local> divLengthx </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> + </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> newy </local>
+</term>
+<symbol> * </symbol>
+<term>
+<local> factor </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> wall </field>
+</term>
+<symbol> = </symbol>
+<term>
+<integerConstant> 2 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> divLengthy </local>
+</term>
+<symbol> * </symbol>
+<term>
+<integerConstant> 50 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> / </symbol>
+<term>
+<local> divLengthx </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> y </field>
+</term>
+<symbol> + </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> newy </local>
+</term>
+<symbol> * </symbol>
+<term>
+<local> factor </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<ifStatement>
+<keyword> if </keyword>
+<symbol> ( </symbol>
+<expression>
+<term>
+<field> wall </field>
+</term>
+<symbol> = </symbol>
+<term>
+<integerConstant> 3 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 250 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> divLengthx </local>
+</term>
+<symbol> * </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<symbol> - </symbol>
+<term>
+<integerConstant> 25 </integerConstant>
+</term>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> / </symbol>
+<term>
+<local> divLengthy </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> newx </local>
+</term>
+<symbol> * </symbol>
+<term>
+<local> factor </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+<keyword> else </keyword>
+<symbol> { </symbol>
+<statements>
+<letStatement>
+<keyword> let </keyword>
+<local> newy </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<integerConstant> 0 </integerConstant>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> divLengthx </local>
+</term>
+<symbol> * </symbol>
+<term>
+<integerConstant> 25 </integerConstant>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+<symbol> / </symbol>
+<term>
+<local> divLengthy </local>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+<letStatement>
+<keyword> let </keyword>
+<local> newx </local>
+<symbol> = </symbol>
+<expression>
+<term>
+<field> x </field>
+</term>
+<symbol> + </symbol>
+<term>
+<symbol> ( </symbol>
+<expression>
+<term>
+<local> newx </local>
+</term>
+<symbol> * </symbol>
+<term>
+<local> factor </local>
+</term>
+</expression>
+<symbol> ) </symbol>
+</term>
+</expression>
+<symbol> ; </symbol>
+</letStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+</statements>
+<symbol> } </symbol>
+</ifStatement>
+<doStatement>
+<field> do </field>
+<identifier> setDestination </identifier>
+<symbol> ( </symbol>
+<expressionList>
+<expression>
+<term>
+<local> newx </local>
+</term>
+</expression>
+<symbol> , </symbol>
+<expression>
+<term>
+<local> newy </local>
+</term>
+</expression>
+</expressionList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+</doStatement>
+<returnStatement>
+<keyword> return </keyword>
+<symbol> ; </symbol>
+</returnStatement>
+</statements>
+<symbol> } </symbol>
+</subroutineBody>
+</subroutineDec>
+<symbol> } </symbol>
+</class>
